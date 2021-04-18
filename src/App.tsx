@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import axios from 'axios';
 
 
@@ -121,7 +121,7 @@ function App() {
         Login()
         console.log(state)
     }
-    }, [])
+    })
 
     useEffect(() => {
         socket.on('ROOM:SET_USERS', users => {

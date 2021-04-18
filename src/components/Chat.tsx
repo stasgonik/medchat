@@ -2,16 +2,16 @@ import React, { useState, useRef, useEffect} from 'react'
 
 import socket from "../socket";
 import './chat.css'
-import axios from "axios";
-import reducer from "../reducer";
-
-
 
 function Chat({chatId, chatUsers, role, oppositeRole, messages, onAddMessage} : any) {
     const [messageValue, setMessageValue] = useState('');
     const messagesRef = useRef(null);
 
     const onSendMessage = async () => {
+        if(!messageValue) {
+            return
+        }
+
         socket.emit('ROOM:NEW_MESSAGE', {
             chatId,
             chatUsers,
@@ -19,7 +19,6 @@ function Chat({chatId, chatUsers, role, oppositeRole, messages, onAddMessage} : 
             oppositeRole,
             body: messageValue,
         });
-        // const { data: { messages } } = await axios.get(`http://localhost:5000/chats/${chatId}`);
         onAddMessage({ chatId, from: chatUsers[role], to: chatUsers[oppositeRole], body: messageValue, type: 'regularMessage'});
         setMessageValue('');
     };
@@ -41,19 +40,6 @@ function Chat({chatId, chatUsers, role, oppositeRole, messages, onAddMessage} : 
                             </div>
                         </div>
                     ))}
-
-                    {/*<div className="message message_notMe">*/}
-                    {/*    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit Excepteur sint occaecat cupidatat non </p>*/}
-                    {/*    <div>*/}
-                    {/*        <span>Stas</span>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
-                    {/*<div className="message message_me">*/}
-                    {/*    <p>proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>*/}
-                    {/*    <div>*/}
-                    {/*        <span>Viktor</span>*/}
-                    {/*    </div>*/}
-                    {/*</div>*/}
                 </div>
 
                 <form className='messageForm'>
