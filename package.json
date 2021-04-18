@@ -30,7 +30,7 @@
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.0"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "react-scripts start",
     "build": "craco build",
     "generate-css-types": "tailwindcss-classnames -o src/classnames/tailwind.ts",
     "test": "craco test",

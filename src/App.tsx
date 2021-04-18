@@ -1,11 +1,12 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 
 
-import socket from './socket';
-import reducer from "./reducer";
 import './App.css';
 import Chat from "./components/Chat";
+import { SocketEventsEnum, configs } from "./config";
+import socket from './socket';
+import reducer from "./reducer";
 
 function App() {
     const [state, dispatch] = React.useReducer(reducer, {
@@ -22,16 +23,13 @@ function App() {
     });
 
     const onJoin = async (obj: any) => {
-        console.log(obj)
         dispatch({
             type: 'JOIN',
             payload: obj
         });
-        console.log(state);
+        socket.emit(SocketEventsEnum.ROOM_JOIN, obj);
 
-        socket.emit('ROOM:JOIN', obj);
-
-        const { data } = await axios.get(`http://localhost:5000/chats/${obj.chatId}`);
+        const { data } = await axios.get(`${configs.REACT_APP_API_URL}/chats/${obj.chatId}`);
         console.log(data.messages)
 
         dispatch({
@@ -70,7 +68,7 @@ function App() {
                 return alert('No information about user!')
             }
 
-            const { data } = await axios.get(`http://localhost:5000/chats/${queryRoom}`);
+            const { data } = await axios.get(`${configs.REACT_APP_API_URL}/chats/${queryRoom}`);
 
             if (!data) {
                 return alert('Unknown Room')
@@ -116,18 +114,16 @@ function App() {
 
             await onJoin(loginObj);
     }
-    console.log(state);
     if (!state.isJoined) {
         Login()
-        console.log(state)
     }
     })
 
     useEffect(() => {
-        socket.on('ROOM:SET_USERS', users => {
+        socket.on(SocketEventsEnum.ROOM_SET_USERS, users => {
             setUsers(users);
         });
-        socket.on('ROOM:NEW_MESSAGE', addMessage);
+        socket.on(SocketEventsEnum.ROOM_NEW_MESSAGE, addMessage);
     }, [])
 
 

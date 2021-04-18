@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect} from 'react'
 
-import socket from "../socket";
 import './chat.css'
+import {SocketEventsEnum} from "../config/socket-events.enum";
+import socket from "../socket";
+
 
 function Chat({chatId, chatUsers, role, oppositeRole, messages, onAddMessage} : any) {
     const [messageValue, setMessageValue] = useState('');
@@ -12,7 +14,7 @@ function Chat({chatId, chatUsers, role, oppositeRole, messages, onAddMessage} : 
             return
         }
 
-        socket.emit('ROOM:NEW_MESSAGE', {
+        socket.emit(SocketEventsEnum.ROOM_NEW_MESSAGE, {
             chatId,
             chatUsers,
             role,
